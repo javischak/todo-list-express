@@ -1,20 +1,24 @@
 const express = require('express')
+//adds express to the server
 const app = express()
+//wraps express in app
 const MongoClient = require('mongodb').MongoClient
+//mongo db
 const PORT = 2121
+//adds port for locat stuff
 require('dotenv').config()
 
 
 let db,
     dbConnectionStr = process.env.DB_STRING,
     dbName = 'todo'
-
+//create a db
 MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     .then(client => {
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
     })
-    
+//connect mongo db    
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
@@ -34,6 +38,7 @@ app.get('/',async (request, response)=>{
     // })
     // .catch(error => console.error(error))
 })
+//get request from server
 
 app.post('/addTodo', (request, response) => {
     db.collection('todos').insertOne({thing: request.body.todoItem, completed: false})
@@ -43,6 +48,7 @@ app.post('/addTodo', (request, response) => {
     })
     .catch(error => console.error(error))
 })
+//create a addTodo to db
 
 app.put('/markComplete', (request, response) => {
     db.collection('todos').updateOne({thing: request.body.itemFromJS},{
@@ -60,6 +66,7 @@ app.put('/markComplete', (request, response) => {
     .catch(error => console.error(error))
 
 })
+//update the markComplete to the db
 
 app.put('/markUnComplete', (request, response) => {
     db.collection('todos').updateOne({thing: request.body.itemFromJS},{
@@ -77,6 +84,7 @@ app.put('/markUnComplete', (request, response) => {
     .catch(error => console.error(error))
 
 })
+//update the markunComplete to the db
 
 app.delete('/deleteItem', (request, response) => {
     db.collection('todos').deleteOne({thing: request.body.itemFromJS})
@@ -87,7 +95,9 @@ app.delete('/deleteItem', (request, response) => {
     .catch(error => console.error(error))
 
 })
+//delte an item from the db
 
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
 })
+// a listener set up for the unique port

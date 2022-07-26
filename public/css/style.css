@@ -1,7 +1,9 @@
 h1{
     color: red;
 }
+/* adding a color of red to the h1 */
 .completed{
     color: gray;
     text-decoration: line-through;
 }
+/* adding the color gray and a line through the class
